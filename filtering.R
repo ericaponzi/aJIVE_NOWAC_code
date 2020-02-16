@@ -8,8 +8,6 @@
 filtering <- function(data, crit, keep){
   filtering.crit <- apply(data, 1, crit, na.rm = TRUE)
   topvar <- order(filtering.crit, decreasing = TRUE)
-  # visualize CpG variance 
-  # select first 50000
   data.filtered <- data[topvar[1:keep],] 
   rownames(data.filtered) <- rownames(data[topvar[1:keep],])
   return(data.filtered)
