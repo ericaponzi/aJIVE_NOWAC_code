@@ -5,10 +5,12 @@
 
 
 extract_loadings_jive <- function(data, jiveResults, k = 10){
+  # extract loadings for joint component
   n_joint <- jiveResults$rankJ
   SVD = svd(do.call(rbind,jiveResults$joint), nu=n_joint, nv=n_joint)
   joint.load <- SVD$u
   
+  # extract loadings for each individual component
   indiv.load <- list()
   n_indiv <- list()
   for (i in 1:length(jiveResults$rankA)){
@@ -16,8 +18,10 @@ extract_loadings_jive <- function(data, jiveResults, k = 10){
     SVDI = svd(jiveResults$individual[[i]],nu=n_indiv[[i]],nv=n_indiv[[i]])
     indiv.load[[i]] <- SVDI$u
   }
+  
   loadings <- list(joint.load, indiv.load)
   names(loadings) <- c('Joint', 'Indiv')
+  
   # visualize variables with higher importance in joint
   abs.loadings.joint <- abs(joint.load)
   topload.joint <- order(abs.loadings.joint, decreasing = TRUE)
@@ -34,10 +38,13 @@ extract_loadings_jive <- function(data, jiveResults, k = 10){
     
     top.indiv.var[[i]] <- rownames(data[[i]])[topload.indiv[[i]][1:k]]
   }
+  
   top.var <- list(top.joint.var, top.indiv.var)
   names(top.var) <- c('Joint', 'Indiv')
+  
   res <- list(loadings, top.var)
   names(res) <- c('Loadings', 'TopVariables')
+  
   return(res)
   
 }
