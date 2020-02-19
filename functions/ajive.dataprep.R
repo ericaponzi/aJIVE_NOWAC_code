@@ -1,8 +1,5 @@
-# ajive wrapper
-# prepares the data for ajive main function and runs i
-# extracts results 
-
-# we need to perform SVDmiss oon the data first
+# prepares the data for ajive main function 
+# need to perform SVDmiss on the data first
 # need to center and scale the data
 
 ajive.dataprep <- function(data){
