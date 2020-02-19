@@ -203,5 +203,5 @@ plot_ipca_varexplained(Xs = as.matrix(data.ipca),
 
 # to extract top variables apply sparse PCA to each 
 # covariance matrix (delta) estimated by iPCA
-# use sparse pcan on each Delts
+# use sparse pca on each Delts
 top.eigen <- lapply(iPCAresults$Delts, function(x) spEigen(x, 10, 0.6))
