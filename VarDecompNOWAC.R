@@ -208,3 +208,6 @@ plot_ipca_varexplained(Xs = as.matrix(data.ipca),
 # covariance matrix (delta) estimated by iPCA
 # use sparse pca on each Delts
 top.eigen <- lapply(iPCAresults$Delts, function(x) spEigen(x, 10, 0.6))
+# we can order sparse eigen vectors (use standardized) 
+# to extract the most relevant components
+
