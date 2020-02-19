@@ -29,7 +29,10 @@ miRNA <- readRDS(file="work/multiomics/280120_Filtered_199miRNAs_NOWAC.rds")
 covs <- covs[rownames(covs) %in% rownames(miRNA),]
 table(covs$case_ctrl, covs$pairs)
 # needs complete pairs so remove singles manually
-covs <- covs[!rownames(covs) %in% c("case 12", "case 16", "case 24", "case 52", "case 66", "ctrl 68", "case 86", "case 88", "ctrl 89", "case 105"),]
+covs <- covs[!rownames(covs) %in% c("case 12", "case 16", "case 24", 
+                                    "case 52", "case 66", "ctrl 68",
+                                    "case 86", "case 88", "ctrl 89",
+                                    "case 105"),]
 table(covs$case_ctrl, covs$pairs)
 
 # only patients with all omics collected
