@@ -4,17 +4,6 @@
 ## then use VarDecompNOWAC from JIVE part on
 
 # load libraries 
-# install.packages('r.jive')
-library(r.jive)
-# devtools::install_github("idc9/r_jive")
-library(ajive)
-# to install iPCA you need to download the folder
-# or load the functions
-# library(iPCA)
-source('functions/functions_iPCA.R')
-library(SpatioTemporal)
-library(ggplot2)
-library(sparseEigen)
 #BiocManager::install("IlluminaHumanMethylation450kanno.ilmn12.hg19")
 require("IlluminaHumanMethylation450kanno.ilmn12.hg19")
 #BiocManager::install("lumiHumanIDMapping")
