@@ -1,3 +1,8 @@
+## this script is to substitute the initial part of VarDecompNOWAC
+## when you want to filter CpGs based on genes they are on
+## first we filter mRNA and then choose CpGs located on those genes
+## then use VarDecompNOWAC from JIVE part on
+
 # load libraries 
 # install.packages('r.jive')
 library(r.jive)
@@ -71,3 +76,13 @@ CpGs <- annot450k[is.element(annot450k$UCSC_RefGene_Name, genes),  ]$Name
 # filter beta.LC based on these CpGs
 selected.CpGs <- intersect(CpGs, rownames(beta.LC))
 DNAm.selected <- beta.LC[selected.CpGs, ]
+
+miRNA <- miRNA
+
+methylation <- as.data.frame(t(DNAm.selected))
+mRNA <- as.data.frame(t(mRNA.var5000))
+miRNA <- as.data.frame(miRNA)
+rownames(methylation) <- rownames(mRNA) <- rownames(miRNA) <- 1:230
+dataNOWAC <- list(t(methylation), t(mRNA), t(miRNA))
+
+
