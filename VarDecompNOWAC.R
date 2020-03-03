@@ -6,7 +6,8 @@ library(ajive)
 # to install iPCA you need to download the folder
 # or load the functions
 # library(iPCA)
-source('functions_iPCA.R')
+source('work/multiomics/erica/functions/functions_iPCA.R')
+
 library(SpatioTemporal)
 library(ggplot2)
 library(sparseEigen)
@@ -22,17 +23,18 @@ library(sparseEigen)
 # covs: covariates
 # keeps: vector of id numbers of patients to be included in the analysis
 load(file = 'work/multiomics/erica/DNAmethylation_Geneexpr_Covariates_Lung.RData')
+
 # this file contains miRNA expression data
-miRNA <- readRDS(file="work/multiomics/280120_Filtered_199miRNAs_NOWAC.rds")
+miRNA <- readRDS(file="work/multiomics/erica/020320_Filtered_199miRNAs_NOWAC.rds")
 
 # only patients with all omics collected
 covs <- covs[rownames(covs) %in% rownames(miRNA),]
 table(covs$case_ctrl, covs$pairs)
 # needs complete pairs so remove singles manually
-covs <- covs[!rownames(covs) %in% c("case 12", "case 16", "case 24", 
-                                    "case 52", "case 66", "ctrl 68",
-                                    "case 86", "case 88", "ctrl 89",
-                                    "case 105"),]
+covs <- covs[!rownames(covs) %in% c("case 12", "case 16", "case 20",
+                                    "case 24", "case 52", "case 66", 
+                                    "ctrl 68", "case 77",
+                                    "case 86",  "case 105"),]
 table(covs$case_ctrl, covs$pairs)
 
 # only patients with all omics collected
@@ -50,17 +52,19 @@ LCsamples <- LCsamples[rownames(miRNA),]
 # filtering can then be done on M instead of beta
 Mvalues <- log2(beta.LC/(1-beta.LC))
 
-# Filtering to the top 50000 most vairable CpG probes based on variance
-# alternative could be IQR
 
-# calculate variance for each CpG and order them
-DNAm.var50000 <- filtering(beta.LC, var, 50000)
-# same procedure for mRNA expression
+source('work/multiomics/erica/functions/filtering.R')
+
+# Filtering to the top 50000 most variable CpG probes based on variance
+# alternative could be IQR
+DNAm.var50000 <- filtering(Mvalues, var, 50000)
+# same procedure for mRNA expression (select first 5000)
 mRNA.var5000 <- filtering(exprs, var, 5000)
 
 # keep all miRNA
-# keep all for miRNA
-miRNA <- miRNA
+# but make it numeric
+miRNA <- lapply(miRNA, function(l) as.numeric(l))
+
 
 methylation <- as.data.frame(t(DNAm.var50000))
 mRNA <- as.data.frame(t(mRNA.var5000))
@@ -206,8 +210,5 @@ plot_ipca_varexplained(Xs = as.matrix(data.ipca),
 
 # to extract top variables apply sparse PCA to each 
 # covariance matrix (delta) estimated by iPCA
-# use sparse pca on each Delts
+# use sparse pcan on each Delts
 top.eigen <- lapply(iPCAresults$Delts, function(x) spEigen(x, 10, 0.6))
-# we can order sparse eigen vectors (use standardized) 
-# to extract the most relevant components
-
