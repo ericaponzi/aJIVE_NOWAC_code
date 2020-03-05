@@ -23,7 +23,7 @@ extract_loadings_ajive <- function(data, ajiveResults, k = 10){
   top.indiv.var <- list()
   topload.joint <- list()
   top.joint.var <- list()
-  for (i in 1:length(length(data))){
+  for (i in 1:length(data)){
     topload.indiv[[i]] <- apply(abs.loadings.indiv[[i]],2, 
                                 function(x) order(x, decreasing = TRUE))
     
