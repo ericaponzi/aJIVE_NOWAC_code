@@ -25,17 +25,14 @@ library(sparseEigen)
 load(file = 'work/multiomics/erica/DNAmethylation_Geneexpr_Covariates_Lung.RData')
 
 # this file contains miRNA expression data
-miRNA <- readRDS(file="work/multiomics/erica/020320_Filtered_199miRNAs_NOWAC.rds")
+miRNA <- readRDS(file="work/multiomics/020320_Filtered_199miRNAs_NOWAC.rds")
 
 # only patients with all omics collected
-covs <- covs[rownames(covs) %in% rownames(miRNA),]
-table(covs$case_ctrl, covs$pairs)
-# needs complete pairs so remove singles manually
 covs <- covs[!rownames(covs) %in% c("case 12", "case 16", "case 20",
                                     "case 24", "case 52", "case 66", 
                                     "ctrl 68", "case 77",
                                     "case 86",  "case 105"),]
-table(covs$case_ctrl, covs$pairs)
+table(covs$case_ctrl, covs$pairs)# needs complete pairs so remove singles manually
 
 # only patients with all omics collected
 miRNA <- miRNA[rownames(miRNA) %in% rownames(covs),]
@@ -63,7 +60,13 @@ mRNA.var5000 <- filtering(exprs, var, 5000)
 
 # keep all miRNA
 # but make it numeric
+# keep all miRNA
+# but make it numeric
+# log transform miRNA 
 miRNA <- lapply(miRNA, function(l) as.numeric(l))
+miRNA <- as.data.frame(miRNA)
+miRNA <- miRNA[, -1]
+miRNA <- log2(miRNA+1)
 
 
 methylation <- as.data.frame(t(DNAm.var50000))
@@ -81,6 +84,7 @@ dataNOWAC <- list(t(methylation), t(mRNA), t(miRNA))
 # we only need the jive function from the package
 # it already performs the SVDmiss for missing data imputation
 # it centers and scales the data
+# include method = 'bic' in jive for sparse jive
 t1 <- system.time(jiveResults <- jive(dataNOWAC))
 # visualize results
 # very simple plot of proportions of variance
@@ -89,7 +93,10 @@ showVarExplained(jiveResults)
 summary(jiveResults)
 # PCA on first two components
 # joint and individual
-showPCA(jiveResults, n_joint = 2, n_indiv = c(2,2,2))
+Colors = rep('blue', 230)
+Colors[which(covs$case_ctrl == 'case')] = 'red'
+showPCA(jiveResults, n_joint = 2, Colors = Colors)
+showPCA(jiveResults, n_indiv = c(2,2,2), Colors = Colors)
 
 # extract loadings estimated from JIVE
 # and top variables for higher loadings
