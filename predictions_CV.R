@@ -6,9 +6,9 @@ set.seed(052020)
 library(pROC)
 library(nnet)
 
-load("ajiveAssocLastproflik.RData")
-load("covs.ajive.RData")
-load("data.ajive.RData")
+load("results/ajiveAssocLastproflik.RData")
+load("data/covs.ajive.RData")
+load("data/data.ajive.RData")
 
 rj <- ajiveResults$joint_rank
 r1 <- ajiveResults$block_decomps[[1]]$individual$rank
