@@ -8,7 +8,7 @@ set.seed(052020)
 library(pROC)
 library(nnet)
 
-setwd("C:/Users/ericapo/Desktop/NOWAC/ResultsFromHunt/")
+
 load("ajiveAssocLastproflik.RData")
 load("covs.ajive.RData")
 load("data.ajive.RData")

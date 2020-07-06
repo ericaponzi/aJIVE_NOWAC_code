@@ -38,9 +38,6 @@ data.logistic$y[data.logistic$y == '2'] <- '0'
 data.logistic$y <- as.factor(data.logistic$y)
 
 
-load("C:/Users/ericapo/Desktop/NOWAC/Rcode/10CV.caco.RData")
-data.logistic <- l[[1]]
-folds <- l[[2]]
 xvars <- names(data.logistic[2:(rj+r1+r2+r3+4)])
 formula <- paste( 'y', '~', paste( xvars, collapse=' + ' ) )
 
@@ -55,9 +52,9 @@ formula.i <- paste( 'y', '~', paste( xvars.i, collapse=' + ' ) )
 
 # pre set folds
 # shuffle data
-#data.logistic <- data.logistic[sample(nrow(data.logistic)),]
+data.logistic <- data.logistic[sample(nrow(data.logistic)),]
 # 10 equally sized folds
-#folds <- cut(seq(1, nrow(data.logistic)), breaks = 10, labels = FALSE)
+folds <- cut(seq(1, nrow(data.logistic)), breaks = 10, labels = FALSE)
 
 
 # CV
@@ -106,11 +103,7 @@ for (i in 1:10){
   auc.j[i] <- roc(data.test$y, data.test$pred.j)$auc
   auc.i[i] <- roc(data.test$y, data.test$pred.i)$auc
   
-  #lty = c(1, rep(3, 9))
-  #plot(roc(data.test$y, data.test$pred), col = 'black', add = TRUE, lty = lty[i])
-  #plot(roc(data.test$y, data.test$pred0), col = 'blue', add = TRUE, lty = lty[i])
-  #plot(roc(data.test$y, data.test$pred.j), col = 'red', add = TRUE, lty = lty[i])
-  
+ 
   
 }
 mean(auc)
@@ -130,9 +123,6 @@ rownames(clin) <- clin$patient.id
 covs.all <- merge(covs, clin, sort = FALSE)
 # response is  metastasis or not
 covs.all$metastasis.gr <- factor(covs.all$Metastasis > '0')
-load("C:/Users/ericapo/Desktop/NOWAC/Rcode/10CV.met.RData")
-data.logistic <- l[[1]]
-folds <- l[[2]]
 
 data.logistic <- as.data.frame(cbind(y = covs.all$metastasis.gr,
                                      jointscores, covs.all$age.sample, covs.all$BMI, 
@@ -164,8 +154,7 @@ formula.i <- paste( 'y', '~', paste( xvars.i, collapse=' + ' ) )
 data.logistic <- data.logistic[sample(nrow(data.logistic)),]
 # 10 equally sized folds
 folds <- cut(seq(1, nrow(data.logistic)), breaks = 10, labels = FALSE)
-l <- list(data.logistic, folds)
-save(l, file = 'C:/Users/ericapo/Desktop/NOWAC/Rcode/10CV.met.RData')
+
 # CV
 auc <- c()
 auc0 <- c()

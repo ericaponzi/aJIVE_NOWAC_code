@@ -53,14 +53,10 @@ formula0 <- paste( 'y', '~', paste( xvars0, collapse=' + ' ) )
 
 # pre set folds
 # shuffle data
+data.logistic <- data.logistic[sample(nrow(data.logistic)),]
+
 # 10 equally sized folds
 folds <- cut(seq(1, nrow(data.logistic)), breaks = 10, labels = FALSE)
-l <- list(data.logistic, folds)
-save(l, file = 'work/multiomics/erica/results/CVsinglepca.RData')
-load("C:/Users/ericapo/Desktop/NOWAC/Rcode/10CV.caco.RData")
-data.logistic.order <- rownames(l[[1]])
-folds <- l[[2]]
-data.logistic <- data.logistic[data.logistic.order,]
 
 # CV
 
@@ -96,8 +92,7 @@ mean(auc)
 mean(auc0)
 sd(auc0)
 
-which(auc == max(auc))
-which(auc == min(auc))
+
 
 ind = sample(2, nrow(data.logistic), replace = TRUE, prob = c(0.9, 0.1))
 train.data = data.logistic[ind == 1, ]
@@ -170,10 +165,9 @@ formula0 <- paste( 'y', '~', paste( xvars0, collapse=' + ' ) )
 
 # pre set folds
 # shuffle data
-load("C:/Users/ericapo/Desktop/NOWAC/Rcode/10CV.met.RData")
-data.logistic.order <- rownames(l[[1]])
-folds <- l[[2]]
-data.logistic <- data.logistic[data.logistic.order,]
+data.logistic <- data.logistic[sample(nrow(data.logistic)),]
+# 10 equally sized folds
+folds <- cut(seq(1, nrow(data.logistic)), breaks = 10, labels = FALSE)
 
 
 
@@ -214,7 +208,5 @@ mean(auc)
 mean(auc0)
 
 
-which(auc == max(auc))
-which(auc == min(auc))
 
 

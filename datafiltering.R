@@ -17,9 +17,9 @@ library("lumi")
 # LC samples: technical info
 # covs: covariates
 # keeps: vector of id numbers of patients to be included in the analysis
-load(file = 'work/multiomics/erica/DNAmethylation_Geneexpr_Covariates_Lung.RData')
+load(file = 'DNAmethylation_Geneexpr_Covariates_Lung.RData')
 # this file contains miRNA expression data
-miRNA <- readRDS(file="work/multiomics/020320_Filtered_199miRNAs_NOWAC.rds")
+miRNA <- readRDS(file="020320_Filtered_199miRNAs_NOWAC.rds")
 
 # only patients with all omics collected
 covs <- covs[rownames(covs) %in% rownames(miRNA),]

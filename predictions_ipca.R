@@ -1,17 +1,17 @@
 # predictions caco
-load("C:/Users/ericapo/Desktop/NOWAC/ResultsFromHunt/covs.ajive.RData")
+load("covs.ajive.RData")
 
 
 # iPCA
-load("C:/Users/ericapo/Desktop/NOWAC/ResultsFromHunt/iPCAresults.RData")
-source("C:/Users/ericapo/Desktop/NOWAC/Rcode/functions_iPCA.R")
+load("iPCAresults.RData")
+source("functions_iPCA.R")
 scores_iPCA <- plot_ipca(Sig = iPCAresults$Sig, pcs = 1:2)$ipca_scores
 jointscores <- scores_iPCA[ , 1:10]
 
 
 # ajive
 library(pROC)
-load("C:/Users/ericapo/Desktop/NOWAC/ResultsFromHunt/ajiveipca.RData")
+load("ajiveipca.RData")
 
 
 
@@ -125,10 +125,6 @@ for (i in 1:10){
   auc0[i] <- roc(data.test$y, data.test$pred0)$auc
   
   
-  #lty = c(1, rep(3, 9))
-  #plot(roc(data.test$y, data.test$pred), col = 'black', add = TRUE, lty = lty[i])
-  #plot(roc(data.test$y, data.test$pred0), col = 'blue', add = TRUE, lty = lty[i])
-  #plot(roc(data.test$y, data.test$pred.j), col = 'red', add = TRUE, lty = lty[i])
   
   
 }
@@ -137,12 +133,10 @@ mean(auc5)
 mean(auc.a)
 mean(auc0)
 
-l <- list(data.logistic, folds)
-save(l, file = '10CVipca.RData')
 
 
 # predictions metastasis
-clin <- readRDS('C:/Users/ericapo/Desktop/NOWAC/ResultsFromHunt/NOWAC_covariates_database_laboratory_160320.rds')
+clin <- readRDS('NOWAC_covariates_database_laboratory_160320.rds')
 
 # merge covs and clin
 clin$patient.id <- paste(clin$CaseStatus, clin$Pairs, sep = ' ')
@@ -276,22 +270,13 @@ for (i in 1:10){
   auc.a[i] <- roc(data.test$y, data.test$pred.a)$auc
   auc0[i] <- roc(data.test$y, data.test$pred0)$auc
   
-  
-  #lty = c(1, rep(3, 9))
-  #plot(roc(data.test$y, data.test$pred), col = 'black', add = TRUE, lty = lty[i])
-  #plot(roc(data.test$y, data.test$pred0), col = 'blue', add = TRUE, lty = lty[i])
-  #plot(roc(data.test$y, data.test$pred.j), col = 'red', add = TRUE, lty = lty[i])
-  
+ 
   
 }
 mean(auc10)
 mean(auc5)
 mean(auc.a)
 mean(auc0)
-
-l <- list(data.logistic, folds)
-save(l, file = '10CVipcamet.RData')
-
 
 
 
