@@ -10,12 +10,12 @@ CpGs are selected from the same genes as mRNA, missing values >40% eliminated, e
 miRNA all included
 needs filtering.R
 
--aJIVE.R: runs ajive on the filtered data. 
+- aJIVE.R: runs ajive on the filtered data. 
 ranks chosen by profile likelihood
 needs ajive.dataprep.R, show.var.explained.ajive and aJIVE package
 screeplots also plotted (needs Screeplots.R)
 
--iPCA.R: runs iPCA on a smaller subset of data 
+- iPCA.R: runs iPCA on a smaller subset of data 
 (same as data.filtering but 500 mRNA to start with)
 runs aJIVE on the same subset
 needs function_iPCA
