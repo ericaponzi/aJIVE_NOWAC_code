@@ -1,13 +1,12 @@
 # load libraries 
 # to install iPCA you need to download the folder
 # or load the functions
-
+# library(iPCA)
 source('functions_iPCA.R')
 source('ajive.dataprep.R')
 library(SpatioTemporal)
 library(ggplot2)
 library(sparseEigen)
-library(pROC)
 
 ############################################
 ### iPCA
@@ -49,181 +48,6 @@ plot_ipca_varexplained(Xs = as.matrix(data.ipca),
 # compare to ajive
 
 ajive.ipca <- ajive(data.ipca, initial_signal_ranks = c(23, 18, 9))
-
-
-
-
-# predictions caco
-load("data/covs.ajive.RData")
-
-
-# iPCA
-scores_iPCA <- plot_ipca(Sig = iPCAresults$Sig, pcs = 1:2)$ipca_scores
-jointscores <- scores_iPCA[ , 1:5]
-
-
-data.logistic <- as.data.frame(cbind(y = covs$case_ctrl, jointscores, covs$age.sample, covs$BMI, 
-                                     covs$smoking_status_cat))
-
-
-data.logistic$y[data.logistic$y == '2'] <- '0'
-data.logistic$y <- as.factor(data.logistic$y)
-
-
-xvars <- names(data.logistic[2:ncol(data.logistic)])
-formula <- paste( 'y', '~', paste( xvars, collapse=' + ' ))
-
-xvars0 <- names(data.logistic[12:14])
-formula0 <- paste( 'y', '~', paste( xvars0, collapse=' + ' ) )
-
-
-model.fit <- glm(formula  , family = 'binomial', 
-                 data = data.logistic)
-
-model.fit0 <- glm(formula0 ,
-                  family = 'binomial', 
-                  data = data.logistic)
-
-
-data.logistic$pred <- predict(model.fit, data.logistic, type = 'response')
-roc <- roc(data.logistic$y, data.logistic$pred)
-
-data.logistic$pred0 <- predict(model.fit0, data.logistic, type = 'response')
-roc0 <- roc(data.logistic$y, data.logistic$pred0)
-
-
-
-# ajive
-jointscores <- unlist(ajive.ipca$joint_scores)
-
-# prediction on outcome
-
-# case vs control
-
-data.logistic.j <- as.data.frame(cbind(y = covs$case_ctrl, jointscores, covs$age.sample, covs$BMI, 
-                                     covs$smoking_status_cat))
-
-
-data.logistic.j$y[data.logistic.j$y == '2'] <- '0'
-data.logistic.j$y <- as.factor(data.logistic.j$y)
-
-
-xvars <- names(data.logistic.j[2:ncol(data.logistic.j)])
-formula <- paste( 'y', '~', paste( xvars, collapse=' + ' ) )
-
-
-model.fit.j <- glm(formula ,
-                  family = 'binomial', 
-                  data = data.logistic.j)
-
-
-data.logistic.j$pred <- predict(model.fit.j, data.logistic.j, type = 'response')
-roc.j <- roc(data.logistic.j$y, data.logistic.j$pred)
-
-
-par(oma = c(4, 1, 1, 1))
-plot(roc, col = 'black', lty = 5, print.auc = TRUE, print.auc.y = 0.4, print.auc.cex = 0.8, identity = FALSE, 
-     main = 'Case vs control')
-plot(roc0, col = 'darkgrey', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.3, print.auc.cex = 0.8)
-plot(roc10, col = 'darkgreen', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.8)
-plot(roc.j, col = 'red', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.1, print.auc.cex = 0.8)
-
-
-
-# predictions metastasis
-clin <- readRDS('NOWAC_covariates_database_laboratory_160320.rds')
-
-# merge covs and clin
-clin$patient.id <- paste(clin$CaseStatus, clin$Pairs, sep = ' ')
-rownames(clin) <- clin$patient.id
-
-covs.all <- merge(covs, clin)
-# response is  metastasis or not
-covs.all$metastasis.gr <- factor(covs.all$Metastasis > '0')
-
-
-
-# iPCA
-scores_iPCA <- plot_ipca(Sig = iPCAresults$Sig, pcs = 1:2)$ipca_scores
-jointscores <- scores_iPCA[ , 1:5]
-jointscores10 <- scores_iPCA[, 1:10]
-
-
-data.logistic <- as.data.frame(cbind(y = covs.all$metastasis.gr, jointscores, covs.all$age.sample, covs.all$BMI, 
-                                     covs.all$smoking_status_cat))
-
-
-data.logistic$y[data.logistic$y == '2'] <- '0'
-data.logistic$y <- as.factor(data.logistic$y)
-
-
-xvars <- names(data.logistic[2:ncol(data.logistic)])
-formula <- paste( 'y', '~', paste( xvars, collapse=' + ' ))
-
-xvars0 <- names(data.logistic[(ncol(data.logistic)-2):ncol(data.logistic)])
-formula0 <- paste( 'y', '~', paste( xvars0, collapse=' + ' ) )
-
-
-model.fit <- glm(formula  , family = 'binomial', 
-                 data = data.logistic)
-
-model.fit0 <- glm(formula0 ,
-                  family = 'binomial', 
-                  data = data.logistic)
-
-
-data.logistic$pred <- predict(model.fit, data.logistic, type = 'response')
-roc10 <- roc(data.logistic$y, data.logistic$pred)
-
-data.logistic$pred0 <- predict(model.fit0, data.logistic, type = 'response')
-roc0 <- roc(data.logistic$y, data.logistic$pred0)
-
-
-
-# ajive
-jointscores <- unlist(ajive.ipca$joint_scores)
-
-# prediction on outcome
-
-# case vs control
-data.logistic.j <- as.data.frame(cbind(y = covs.all$metastasis.gr, jointscores, covs.all$age.sample, covs.all$BMI, 
-                                     covs.all$smoking_status_cat))
-
-
-
-
-data.logistic.j$y[data.logistic.j$y == '2'] <- '0'
-data.logistic.j$y <- as.factor(data.logistic.j$y)
-
-
-xvars <- names(data.logistic.j[2:ncol(data.logistic.j)])
-formula <- paste( 'y', '~', paste( xvars, collapse=' + ' ) )
-
-
-model.fit.j <- glm(formula ,
-                   family = 'binomial', 
-                   data = data.logistic.j)
-
-
-data.logistic.j$pred <- predict(model.fit.j, data.logistic.j, type = 'response')
-roc.j <- roc(data.logistic.j$y, data.logistic.j$pred)
-
-
-par(oma = c(4, 1, 1, 1))
-plot(roc, col = 'black', lty = 5, print.auc = TRUE, print.auc.y = 0.4, print.auc.cex = 0.8, identity = FALSE, 
-     main = 'Metastasis (yes vs no)')
-plot(roc0, col = 'darkgrey', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.3, print.auc.cex = 0.8)
-plot(roc10, col = 'darkgreen', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.8)
-plot(roc.j, col = 'red', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.1, print.auc.cex = 0.8)
-
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottom",bty = "n", inset=c(0,0.02), xpd = TRUE, ncol = 2,  legend=c("iPCA 5 comp",
-                                                                            "Patient Covariates", 
-                                                                            "iPCA 10 comp",
-                                                                            "aJIVE"),
-       lty=c(5,5,5, 5, 3), col = c("black", "darkgrey", "darkgreen", "red", "darkgrey"), cex = 0.8)
-
 
 
 
