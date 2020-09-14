@@ -19,9 +19,9 @@ ajive.dataprep <- function(data){
     Ximp <- Ximp0 - matrix(rep(centerValues, 
                                  ncol(Ximp0)), nrow = nrow(Ximp0))
     # scale values
-    n <- nrow(Ximp) * ncol(Ximp) 
-    Ximp <- Ximp/norm(Ximp, type = "f") * sqrt(sum(n))
-    data.ajive[[l]] <- Ximp
+   # n <- nrow(Ximp) * ncol(Ximp) 
+  #  Ximp <- Ximp/norm(Ximp, type = "f") * sqrt(sum(n))
+   data.ajive[[l]] <- Ximp
   }
   
     return(data.ajive)

@@ -39,14 +39,34 @@ dim(miRNA)
 met.pca <- prcomp(methylation, center = TRUE, scale = TRUE)
 str(met.pca)
 met.pcs <- met.pca$x[, 1:5]
+std_dev <- met.pca$sdev
+pr_var <- std_dev^2
+prop_varex <- pr_var/sum(pr_var)
+plot(prop_varex[1:20], xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     type = "b")
 
 # pca on mRNA
 mrna.pca <- prcomp(mRNA, center = TRUE, scale = TRUE)
 mrna.pcs <- mrna.pca$x[,1:5]
+std_dev <- mrna.pca$sdev
+pr_var <- std_dev^2
+prop_varex <- pr_var/sum(pr_var)
+plot(prop_varex[1:20], xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     type = "b")
+
 
 # pca on miRNA
 mirna.pca <- prcomp(miRNA, center = TRUE, scale = TRUE)
 mirna.pcs <- mirna.pca$x[,1:5]
+std_dev <- mirna.pca$sdev
+pr_var <- std_dev^2
+prop_varex <- pr_var/sum(pr_var)
+plot(prop_varex[1:20], xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     type = "b")
+
 
 # prediction on outcome
 
@@ -127,10 +147,10 @@ plot(roc(data.test$y, data.test$pred.j),
      col = 'red', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.5, print.auc.cex = 0.9)
 plot(roc(data.test$y, data.test$pred.i), 
      col = 'darkgreen', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.3, print.auc.cex = 0.9)
-plot(roc(data.test$y, data.test$pred.ni), 
-     col = 'darkorchid', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.9)
+#plot(roc(data.test$y, data.test$pred.ni), 
+ #    col = 'darkorchid', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.9)
 plot(roc(data.test$y, data.test$pred.ni.cov), 
-     col = 'darkorange', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.1, print.auc.cex = 0.9)
+     col = 'darkorange', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.9)
 
 
 # load clinical covariates
@@ -221,10 +241,10 @@ plot(roc(data.test$y, data.test$pred.j),
      col = 'red', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.5, print.auc.cex = 0.9)
 plot(roc(data.test$y, data.test$pred.i), 
      col = 'darkgreen', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.3, print.auc.cex = 0.9)
-plot(roc(data.test$y, data.test$pred.ni), 
-     col = 'darkorchid', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.9)
+#plot(roc(data.test$y, data.test$pred.ni), 
+ #    col = 'darkorchid', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.9)
 plot(roc(data.test$y, data.test$pred.ni.cov), 
-     col = 'darkorange', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.1, print.auc.cex = 0.9)
+     col = 'darkorange', add = TRUE, lty = 5, print.auc = TRUE, print.auc.y = 0.2, print.auc.cex = 0.9)
 
 par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
 plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
@@ -234,18 +254,16 @@ legend("bottom",bty = "n", inset=c(0,0.02), xpd = TRUE, ncol = 2,
                 "Patient Covariates", 
                 "Joint Components",
                 "Individual Components", 
-                "Non integrative", 
-                "Non integrative + covs"),
-       lty = c(5,5,5,5,5,5),
+                "Non integrative"),
+       lty = c(5,5,5,5,5),
        
        col = c("black", 
                "blue", 
                "red", 
                "darkgreen", 
-               "darkorchid", 
                "darkorange")
        
        
-       , cex = 0.8)
+       , cex = 0.7)
 
 
