@@ -1,4 +1,4 @@
-# VarianceDecompositionNOWAC
+# ajive_NOWAC
 
 A set of scripts and auxiliary functions to perform aJIVE and iPCA on different omic layers. 
 
