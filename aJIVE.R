@@ -62,7 +62,7 @@ ajiveResults <- ajive(data.ajive,
                       initial_signal_ranks = r) 
 
 load('ajiveAssocLastproflik.RData')
-load('data.ajive2.RData')
+load('data.ajive.RData')
 decomposition_heatmaps(data.ajive, ajiveResults)
 
 # pairwise ajive comparisons
